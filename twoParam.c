@@ -32,7 +32,7 @@ float costFunction (float w, float b)
     return result;
 }
 
-void gradientDescent (float w, float b, size_t iters, float eps, float learnRate)
+void finiteDifference (float w, float b, size_t iters, float eps, float learnRate)
 {
     for (size_t i = 0; i < iters; i++)
     {
@@ -57,6 +57,6 @@ int main()
     float rate = 1e-3;
     float iters = 15000;
 
-    gradientDescent(w, b, iters, eps, rate);
+    finiteDifference(w, b, iters, eps, rate);
     return 0;
 }
