@@ -4,29 +4,29 @@
 #include <math.h>
 
 // c math naming
-// using it for our activation function 
+// using it for our activation function
 float sigmoidf(float x)
 {
-    return 1.f/(1.f + expf(-x));
+    return 1.f / (1.f + expf(-x));
 }
 
-//OR-gate 
-float trainSet [][3] = {
+// OR-gate
+float trainSet[][3] = {
     {0, 0, 0},
     {0, 1, 1},
     {1, 0, 1},
     {1, 1, 1},
-    };
+};
 
-#define trainSetCount (sizeof(trainSet)/sizeof(trainSet[0]))
+#define trainSetCount (sizeof(trainSet) / sizeof(trainSet[0]))
 
-float randomFloat (size_t seed)
+float randomFloat(size_t seed)
 {
     srand(seed);
-    return (float) rand() / (float) RAND_MAX;
+    return (float)rand() / (float)RAND_MAX;
 }
 
-float costFunction (float w1, float w2, float b)
+float costFunction(float w1, float w2, float b)
 {
     float result = 0.0f;
     for (size_t i = 0; i < trainSetCount; i++)
@@ -34,35 +34,34 @@ float costFunction (float w1, float w2, float b)
         float x1 = trainSet[i][0];
         float x2 = trainSet[i][1];
 
-        //applying activation function
-        float y = sigmoidf(x1*w1 + x2*w2 + b);
+        // applying activation function
+        float y   = sigmoidf(x1 * w1 + x2 * w2 + b);
         float err = y - trainSet[i][2];
-        result = result + err*err;    
+        result    = result + err * err;
     }
     result /= trainSetCount;
     return result;
 }
 
-void finiteDifference (float w1, float w2, float bias, float eps, float learnRate, size_t iters)
+void finiteDifference(float w1, float w2, float b, float eps, float learnRate, size_t iters)
 {
     for (size_t i = 0; i < iters; i++)
     {
-        float dw1 = (costFunction(w1 + eps, w2, bias) - costFunction(w1, w2, bias))/eps;
-        float dw2 = (costFunction(w1, w2 + eps, bias) - costFunction(w1, w2, bias))/eps;
-        float db = (costFunction(w1, w2, bias + eps) - costFunction(w1, w2, bias))/eps;
+        float dw1 = (costFunction(w1 + eps, w2, b) - costFunction(w1, w2, b)) / eps;
+        float dw2 = (costFunction(w1, w2 + eps, b) - costFunction(w1, w2, b)) / eps;
+        float db  = (costFunction(w1, w2, b + eps) - costFunction(w1, w2, b)) / eps;
 
-        bias -= learnRate*db;
-        w1 -= learnRate*dw1;
-        w2 -= learnRate*dw2;
+        b  -= learnRate * db;
+        w1 -= learnRate * dw1;
+        w2 -= learnRate * dw2;
 
-        printf("Cost: %f, w: %f, w2: %f\n", costFunction(w1, w2, bias), w1, w2);
+        printf("Cost: %f, w: %f, w2: %f\n", costFunction(w1, w2, b), w1, w2);
     }
     printf("---------------------------\n");
-    printf("Final w: %f Final w2: %f Final b: %f\n", w1, w2, bias);
-
+    printf("Final w: %f Final w2: %f Final b: %f\n", w1, w2, b);
 }
 
-int main (void)
+int main(void)
 {
     float w1 = randomFloat(10000) * 10.0f;
     float w2 = randomFloat(20000) * 10.0f;
